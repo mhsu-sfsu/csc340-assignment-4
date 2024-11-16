@@ -1,10 +1,16 @@
 #include <iostream>
 #include <cstdlib> 
 
-//TODO: add your documentation here
-// TO DO: implement jacobsthal
-//      Hint: it should return a long long (integers)
-
+// Function return type: long long
+// Given an integer n, calculates the corresponding value and returns it through recursion
+long long jacobsthal(int n){
+    long long curnum = n; // Converting integer to long long
+    if (curnum == 0 || curnum == 1){ // Base case - returns 0 or 1 depending on the value of n
+        return curnum;
+    } else { // if n > 1, J(n − 1) + 2 × J(n − 2)
+        return jacobsthal(n-1) + (2 * jacobsthal(n-2));
+    }
+}
 
 int main(int argc, char* argv[]) {
     // Read n from command line argument
