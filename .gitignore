@@ -1,0 +1,6 @@
+*.out
+*.dSYM
+*.o
+*.json
+.DS_Store
+makefile
