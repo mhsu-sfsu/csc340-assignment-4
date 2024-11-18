@@ -29,8 +29,14 @@ class LinkedBag : public BagInterface<ItemType>{
 		void sort(int method=0);
 		// TO DO: update prototype of merge sort based on your implementation
 		void mergeSort();
+		Node<ItemType>* mergeSort(Node<ItemType>* head);
+		void split(Node<ItemType>* source, Node<ItemType>** leftRef, Node<ItemType>** rightRef);
+		Node<ItemType>* merge(Node<ItemType>* left, Node<ItemType>* right);
 		// EC TO DO: update prototype of quick sort based on your implementation
 		void quickSort();
+		Node<ItemType>* getTail(Node<ItemType>* head);
+		Node<ItemType>* quickSort(Node<ItemType>* head, Node<ItemType>* end);
+		Node<ItemType>* partition(Node<ItemType>* head, Node<ItemType>* end, Node<ItemType>** newHead, Node<ItemType>** newEnd);
 		// --------------------------------------------------------------
 
 		int getCurrentSize() const;

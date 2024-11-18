@@ -28,15 +28,143 @@ void LinkedBag<ItemType>::sort(int method){
 //TO DO: implement merge sort and change its prototype if you need to.
 template<class ItemType>
 void LinkedBag<ItemType>::mergeSort(){
+    headPtr = mergeSort(headPtr);  // Sort the list starting from the head pointer
+}
 
+// Recursive merge sort for linked list
+template<class ItemType>
+Node<ItemType>* LinkedBag<ItemType>::mergeSort(Node<ItemType>* head){
+    if (head == nullptr || head->getNext() == nullptr) {
+        return head;  // Base case: empty list or single node
+    }
 
+    Node<ItemType>* left = nullptr;
+    Node<ItemType>* right = nullptr;
+
+    // Split the list into two halves
+    split(head, &left, &right);
+
+    // Recursively sort each half
+    left = mergeSort(left);
+    right = mergeSort(right);
+
+    // Merge the two sorted halves
+    return merge(left, right);
+}
+
+// Splits the linked list into two halves
+template<class ItemType>
+void LinkedBag<ItemType>::split(Node<ItemType>* source, Node<ItemType>** leftRef, Node<ItemType>** rightRef) {
+    Node<ItemType>* slow = source;
+    Node<ItemType>* fast = source->getNext();
+
+    // Use slow/fast pointer technique to find the midpoint
+    while (fast != nullptr) {
+        fast = fast->getNext();
+        if (fast != nullptr) {
+            slow = slow->getNext();
+            fast = fast->getNext();
+        }
+    }
+
+    // Split the list into two parts
+    *leftRef = source;
+    *rightRef = slow->getNext();
+    slow->setNext(nullptr);  // Break the list into two
+}
+
+// Merges two sorted linked lists
+template<class ItemType>
+Node<ItemType>* LinkedBag<ItemType>::merge(Node<ItemType>* left, Node<ItemType>* right) {
+    if (left == nullptr) return right;
+    if (right == nullptr) return left;
+
+    Node<ItemType>* result = nullptr;
+
+    // Compare the data in the nodes and link them in sorted order
+    if (left->getItem() <= right->getItem()) {
+        result = left;
+        result->setNext(merge(left->getNext(), right));
+    } else {
+        result = right;
+        result->setNext(merge(left, right->getNext()));
+    }
+
+    return result;
 }
 
 //Extra Credit -- TO DO: implement quick sort and change its prototype 
 //                       if you need to.
 template<class ItemType>
 void LinkedBag<ItemType>::quickSort(){
-	
+	headPtr = quickSort(headPtr, getTail(headPtr));
+}
+
+template<class ItemType>
+Node<ItemType>* LinkedBag<ItemType>::getTail(Node<ItemType>* head) {
+    while (head != nullptr && head->getNext() != nullptr) {
+        head = head->getNext();
+    }
+    return head;
+}
+
+template<class ItemType>
+Node<ItemType>* LinkedBag<ItemType>::quickSort(Node<ItemType>* head, Node<ItemType>* end) {
+    if (!head || head == end) {
+        return head;
+    }
+
+    Node<ItemType>* newHead = nullptr;
+    Node<ItemType>* newEnd = nullptr;
+
+    Node<ItemType>* pivot = partition(head, end, &newHead, &newEnd);
+
+    if (newHead != pivot) {
+
+        Node<ItemType>* temp = newHead;
+        while (temp->getNext() != pivot) {
+            temp = temp->getNext();
+        }
+        temp->setNext(nullptr);
+
+        newHead = quickSort(newHead, temp);
+
+        temp = getTail(newHead);
+        temp->setNext(pivot);
+    }
+
+    pivot->setNext(quickSort(pivot->getNext(), newEnd));
+
+    return newHead;
+}
+
+template<class ItemType>
+Node<ItemType>* LinkedBag<ItemType>::partition(Node<ItemType>* head, Node<ItemType>* end, Node<ItemType>** newHead, Node<ItemType>** newEnd) {
+    Node<ItemType>* pivot = end;
+    Node<ItemType>* prev = nullptr;
+    Node<ItemType>* curr = head;
+    Node<ItemType>* tail = pivot;
+
+
+    while (curr != pivot) {
+        if (curr->getItem() < pivot->getItem()) {
+            if (!(*newHead)) *newHead = curr;
+            prev = curr;
+            curr = curr->getNext();
+        } else {
+            if (prev) prev->setNext(curr->getNext());
+            Node<ItemType>* temp = curr->getNext();
+            curr->setNext(nullptr);
+            tail->setNext(curr);
+            tail = curr;
+            curr = temp;
+        }
+    }
+
+    if (!(*newHead)) *newHead = pivot;
+    *newEnd = tail;
+
+    return pivot;
 }
 // --------------------------------------------------------------
 
